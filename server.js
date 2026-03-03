@@ -1,17 +1,27 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const cors = require('cors');
 
 const app = express();
-app.use(cors());
+
+// 1. BULLETPROOF EXPRESS CORS: Allows your Vercel frontend to talk to this backend
+app.use(cors({
+    origin: "*", // The asterisk means "allow any frontend URL" so it won't block Vercel
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] } // React default port
+    cors: {
+        origin: "*", 
+        methods: ["GET", "POST"]
+    }
 });
+
 
 // --- 1. Database Connection ---
 // Note: You must have MongoDB installed locally, or replace this with a MongoDB Atlas URI
@@ -86,4 +96,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => console.log('User disconnected'));
 });
 
-server.listen(3000, () => console.log('Backend running on http://localhost:3000'));
+// 4. THE RENDER PORT FIX: Render assigns a dynamic port, so we must use process.env.PORT
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is running and listening on port ${PORT}`);
+});
