@@ -25,7 +25,7 @@ const io = new Server(server, {
 
 // --- 1. Database Connection ---
 // Note: You must have MongoDB installed locally, or replace this with a MongoDB Atlas URI
-mongoose.connect('mongodb+srv://admin:Jojo#76199>@cluster0.144rmay.mongodb.net/?appName=Cluster0')
+mongoose.connect('mongodb+srv://admin:Jojo#76199@cluster0.144rmay.mongodb.net/?appName=Cluster0')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
